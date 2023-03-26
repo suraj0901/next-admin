@@ -1,7 +1,10 @@
+import { Suspense } from "react";
 import Navbar from "./component/Navbar";
+import SideBar from "./component/SideBar";
+import ToastContainerProvider from "./component/ToastContainerProvider";
 import "./globals.css";
 import { Inter } from "next/font/google";
-
+import Loading from "./loading";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
@@ -17,8 +20,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
+        <ToastContainerProvider />
         <Navbar />
-        <main className="py-5 max-w-5xl mx-auto">{children}</main>
+        <div className="lg:grid lg:grid-cols-12">
+          <SideBar />
+          <Suspense fallback={<Loading />}>
+            <main className="col-span-10 p-5">{children}</main>
+          </Suspense>
+        </div>
       </body>
     </html>
   );

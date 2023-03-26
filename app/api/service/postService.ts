@@ -1,10 +1,19 @@
-import prisma from "./prisma";
+import prisma from "../../../lib/prisma";
 import { Post } from "@prisma/client";
 
 export const getAllPost = async () => {
   const posts = await prisma.post.findMany();
   return posts;
 };
+
+export const getPost = async (id:string) => {
+  const post = await prisma.post.findUnique({
+    where: {
+      id
+    }
+  })
+  return post
+}
 
 export const createPost = async (data: PostType) => {
   const post = await prisma.post.create({ data });
@@ -27,5 +36,5 @@ export const deletePost = async (id:string) => {
       id
     }
   })
-  return deletePost
+  return post
 }

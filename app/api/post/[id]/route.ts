@@ -1,4 +1,4 @@
-import { deletePost, updatePost } from "@/lib/postApi";
+import { deletePost, updatePost } from "@/app/api/service/postService";
 import { NextResponse } from "next/server";
 
 type Context = {
@@ -11,11 +11,11 @@ export async function PUT(req: Request, { params }: Context) {
   const body: Partial<PostType> = await req.json();
   const id = params.id;
   const post = await updatePost(id, body);
-  NextResponse.json(post);
+  return NextResponse.json(post);
 }
 
-export async function DELTE(req: Request, {params}: Context) {
+export async function DELETE(req: Request, {params}: Context) {
     const id = params.id
     const post = await deletePost(id)
-    return post
+    return NextResponse.json(post)
 }

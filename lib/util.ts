@@ -1,0 +1,1 @@
+export const reducer = <T>(prev:T, next:Partial<T>) => ({...prev, ...next})
