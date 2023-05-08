@@ -29,26 +29,27 @@ const useMutation = <T, E>({
       isError: false,
       isSuccess: false,
       error: "",
-      data: initialData ?? ("" as E),
+      data: initialData ?? ({} as E),
     }
   );
 
   const mutate = (body: T) => {
     const rollback = structuredClone(state.data);
-    updateState({ isLoading: true, data: { ...state.data, ...body } });
+    updateState({ isLoading: true });
     mutationFn(body)
       .then((res) => {
         updateState({ isSuccess: true });
         onSuccess(res);
       })
       .catch((error) => {
-        updateState({ isError: true, error, data: { ...rollback } });
+        updateState({ isError: true, error });
         onError(error);
       })
       .finally(() => {
         updateState({ isLoading: false });
       });
   };
+  
   return { ...state, mutate };
 };
 

@@ -5,6 +5,7 @@ import ToastContainerProvider from "./component/ToastContainerProvider";
 import "./globals.css";
 import { Inter } from "next/font/google";
 import Loading from "./loading";
+import AuthContext from "./component/AuthContext";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
@@ -20,14 +21,16 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <ToastContainerProvider />
-        <Navbar />
-        <div className="lg:grid lg:grid-cols-12">
-          <SideBar />
-          <Suspense fallback={<Loading />}>
-            <main className="col-span-10 p-5">{children}</main>
-          </Suspense>
-        </div>
+        <AuthContext>
+          <ToastContainerProvider />
+          <Navbar />
+          <div className="lg:grid lg:grid-cols-12">
+            <SideBar />
+            <Suspense fallback={<Loading />}>
+              <main className="col-span-10 p-5">{children}</main>
+            </Suspense>
+          </div>
+        </AuthContext>
       </body>
     </html>
   );

@@ -1,9 +1,7 @@
 "use client";
 import { useDeletPost } from "@/lib/service/postService";
-import { useRouter } from "next/navigation";
 
 export default function DeletePost({ id }: { id: string }) {
-  const router = useRouter();
   const { mutate } = useDeletPost();
   const handleDelete = async () => {
     mutate(id);

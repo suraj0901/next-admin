@@ -13,6 +13,7 @@ export default function CreatePostPage() {
   const { isLoading, mutate } = useCreatePost();
   const handleSave = (e: React.MouseEvent<HTMLButtonElement>) => {
     mutate(post);
+    // updatePost({ title: "", content: "" });
   };
 
   const disableSaveButton = !post.title.trim() || !post.content.trim();
@@ -33,7 +34,7 @@ export default function CreatePostPage() {
                 : "text-white bg-teal-500"
             }`}
           >
-            {isLoading ? <Spinner /> : <span>Save</span>}
+            {isLoading && <Spinner />} <span>Save</span>
           </button>
         </div>
         <section className="flex flex-col gap-2">

@@ -1,4 +1,5 @@
 import { deletePost, updatePost } from "@/app/api/service/postService";
+import { NextApiResponse } from "next";
 import { NextResponse } from "next/server";
 
 type Context = {

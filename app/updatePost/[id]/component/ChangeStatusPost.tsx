@@ -9,20 +9,20 @@ interface Prop {
 }
 
 export default function ChangeStatusPost({ published, id }: Prop) {
-  const { mutate, isLoading, data } = useUpdatePost({ published, id });
+  const { mutate } = useUpdatePost();
   const handleUpdate = () => {
-    mutate({ published: !data.published, id });
+    mutate({ published: !published, id });
   };
   return (
     <button
       onClick={handleUpdate}
-      className={`px-5 py-2 text-sm font-medium tracking-wide   rounded-full ${
-        data.published
+      className={`px-5 py-2 text-sm font-medium tracking-wide flex rounded-full ${
+        published
           ? "ring-1 ring-green-500 text-green-500 hover:bg-green-700 hover:text-white "
           : "bg-green-700 text-white "
       }`}
     >
-      {isLoading ? <Spinner /> : data.published ? "UnPublish" : "Publish"}
+      {published ? "UnPublish" : "Publish"}
     </button>
   );
 }

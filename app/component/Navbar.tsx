@@ -8,9 +8,11 @@ export default function Navbar() {
           Blogi
         </Link>
         <div className="flex  gap-10">
-          <button className="lg:block hidden px-6 py-2 rounded bg-green-700 hover:bg-green-600 font-medium text-white">
-            <Link href={"/createPost"}> Crate Post</Link>
-          </button>
+          <Link href={"/createPost"}>
+            <button className="lg:block hidden px-6 py-2 rounded bg-green-700 hover:bg-green-600 font-medium text-white">
+              Crate Post
+            </button>
+          </Link>
           <button className="px-4 py-2 rounded-full">Dark</button>
           <button className="sm:hidden">
             <svg

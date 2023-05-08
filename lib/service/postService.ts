@@ -1,56 +1,99 @@
 import { toast } from "react-hot-toast";
-import { createPost, deletePost, updatePost } from "./apiCall";
+import { createPost, deletePost, getAllPost, revalidate, updatePost } from "./apiCall";
 import { useRouter } from "next/navigation";
 import useMutation from "../module/useMutation";
+import useQuery, { refetch } from "../module/useQuery";
 
 interface Option {
-    refresh?: boolean;
-    back?:boolean
+  refresh?: boolean;
+  back?: boolean;
+  message?: string;
 }
 
 const postMessage = (message: string) => `Post ${message} Successfully!`;
-const configureOption = (message: string, option:Option = {refresh: false, back:false}) => {
-    const router = useRouter()
-  return {
-    onSuccess: (res: any) => {
-      if (!res.status) {
-        console.log({statusText: res.statusText})
-        return toast.error(res.statusText);
-      }
-      toast.success(message);
-      if(option.refresh) router.refresh()
-      if(option.back) router.back()
-    },
-    onError: (err: any) => {
-      console.log({err});
-      const message = `${err.status} ${err.statusText}`
-      toast.error(message);
-    },
-  };
+
+const handleError = (err: any) => {
+  const message = `${err.status} ${err.statusText}`;
+  toast.error(message);
 };
 
+const handleSuccess = (res: any) => {
+  if (!res.status) {
+    toast.error(res.statusText);
+  }
+  return res.status;
+};
+
+export const useGetAllPost = () => {
+  const result = useQuery({
+    id: "/",
+    initialData: [],
+    fetcher: getAllPost,
+    onSuccess: (res) => {
+      handleSuccess(res)
+    }
+  })
+
+  return result
+}
 
 export const useCreatePost = () => {
+  // const {mutate} = useRevalidate()
   const result = useMutation({
     mutationFn: createPost,
-    ...configureOption(postMessage("created")),
+    onSuccess: (res) => {
+      if (handleSuccess(res)) {
+        toast.success(postMessage("created"));
+        refetch('/')
+      }
+    },
+    onError: handleError,
   });
   return result;
 };
 
-export const useUpdatePost = <T>(initialData?:T) => {
+export const useUpdatePost = () => {
+  const router = useRouter();
   const result = useMutation({
     mutationFn: updatePost,
-    initialData,
-    ...configureOption(postMessage("updated")),
+    onSuccess: (res) => {
+      if (handleSuccess(res)) {
+        toast.success(postMessage("updated"));
+        router.refresh();
+      }
+    },
+    onError: handleError,
   });
   return result;
 };
 
 export const useDeletPost = () => {
+  // const {mutate, isSuccess} = useRevalidate()
+  const router = useRouter()
   const result = useMutation({
     mutationFn: deletePost,
-    ...configureOption(postMessage("deleted"), {back: true}),
+    onSuccess: (res) => {
+      if (handleSuccess(res)) {
+        toast.success(postMessage("deleted"));
+        refetch("/")
+        router.back()
+      }
+    },
+    onError: handleError,
   });
-  return result
+  return result;
 };
+
+// export const useRevalidate = () => {
+//   const router = useRouter()
+//   const result = useMutation({
+//     mutationFn: revalidate,
+//     onSuccess:(res) => {
+//       if(handleSuccess(res)){
+//         router.refresh()
+//       }
+//     },
+//     onError: handleError
+//   })
+//   return result
+// }
